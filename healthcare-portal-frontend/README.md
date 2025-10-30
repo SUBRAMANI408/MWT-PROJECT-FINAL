@@ -1,8 +1,15 @@
-# React + Vite
+# Healthcare Portal Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the Vite/React frontend for the healthcare portal application. Built with React and Vite for optimal performance and developer experience.
 
-Currently, two official plugins are available:
+## Test deploy
+
+This is a test commit to verify the Netlify deployment workflow.
+Triggered: October 30, 2025
+
+## Development
+
+This app uses Vite with HMR and ESLint. Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
