@@ -1,0 +1,27 @@
+name: Deploy frontend to Netlify
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'healthcare-portal-frontend/**'
+
+jobs:
+  trigger-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Netlify build hook
+        env:
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -z "$NETLIFY_BUILD_HOOK" ]; then
+            echo "NETLIFY_BUILD_HOOK secret not set. Please add it in Settings → Secrets → Actions.";
+            exit 1;
+          fi
+          echo "Calling Netlify build hook..."
+          status=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$NETLIFY_BUILD_HOOK")
+          echo "Netlify build hook returned HTTP status $status"
+          if [ "$status" -ne 200 ] && [ "$status" -ne 201 ]; then
+            echo "Netlify build hook failed with status $status";
+            exit 1;
+          fi

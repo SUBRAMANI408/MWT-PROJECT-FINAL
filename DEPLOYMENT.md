@@ -149,4 +149,45 @@ npm run dev
 
 ---
 
-If you want, I can add ready-to-use Render/Heroku/Vercel project manifests with instructions to connect them to the repo (I can also prepare screenshots or step-by-step UI clicks). Request which hosting provider you prefer and I'll prepare the exact steps to complete the deployment and set environment variables.
+## 8) GitHub Actions: secrets required for automatic deploys
+
+If you want the repository to auto-deploy when you push to `master`, add the following GitHub Secrets in the repository Settings → Secrets → Actions.
+
+Backend (Heroku) secrets:
+- HEROKU_API_KEY — Your Heroku account API key (from Heroku account settings).
+- HEROKU_APP_NAME — The exact Heroku app name (e.g. my-healthcare-backend).
+- HEROKU_EMAIL — The email associated with your Heroku account.
+
+Frontend (Vercel) secrets:
+- VERCEL_TOKEN — Personal token from Vercel (Account → Tokens).
+- VERCEL_ORG_ID — Vercel organization ID for your account/project.
+- VERCEL_PROJECT_ID — Vercel project ID for the frontend project.
+
+Add these secrets and then push to `master` (or create a PR to `master`) — the workflows under `.github/workflows` will run and deploy.
+
+## Alternative deployment providers
+
+The repository includes workflows for Render (backend) and Netlify (frontend) as well. To use these instead of Heroku/Vercel, add these secrets:
+
+Backend (Render) secrets:
+- RENDER_API_KEY — Your Render API key (from Account Settings → API Keys).
+- RENDER_SERVICE_ID — The service ID of your Render web service (found in the URL when viewing the service, or via the Render API).
+
+Frontend (Netlify) secrets:
+- NETLIFY_BUILD_HOOK — The full build hook URL from your Netlify site (Site Settings → Build & deploy → Build hooks → Add build hook).
+
+How to get the secrets:
+1. For Render:
+   - Go to render.com → Account Settings → API Keys
+   - Create a new API key, copy it (you won't see it again)
+   - Go to your web service dashboard, the service ID is in the URL: `dashboard.render.com/web/srv-XXXXX`
+
+2. For Netlify:
+   - Go to app.netlify.com → Your site → Site settings → Build & deploy
+   - Scroll to "Build hooks", click "Add build hook"
+   - Name it (e.g., "GitHub Actions"), choose branch (master)
+   - Copy the full hook URL (looks like `https://api.netlify.com/build_hooks/xxxxx`)
+
+The workflows will trigger when you push changes to their respective folders:
+- Changes in `healthcare-portal-backend/` trigger the Render deploy
+- Changes in `healthcare-portal-frontend/` trigger the Netlify build

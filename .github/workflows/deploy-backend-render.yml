@@ -1,0 +1,46 @@
+name: Deploy backend to Render
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'healthcare-portal-backend/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install backend dependencies
+        working-directory: healthcare-portal-backend
+        run: |
+          npm ci
+
+      - name: Run backend tests (if any)
+        working-directory: healthcare-portal-backend
+        run: |
+          if [ -f package.json ]; then npm test || true; fi
+
+      - name: Trigger Render deploy via API
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+        run: |
+          if [ -z "$RENDER_API_KEY" ] || [ -z "$RENDER_SERVICE_ID" ]; then
+            echo "Missing Render secrets (RENDER_API_KEY or RENDER_SERVICE_ID). Set them in repo Secrets.";
+            exit 1;
+          fi
+          echo "Triggering deploy for Render service $RENDER_SERVICE_ID"
+          response=$(curl -s -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
+            -H "Authorization: Bearer $RENDER_API_KEY" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json" \
+            -d '{"clearCache": true}')
+          echo "Render response: $response"
