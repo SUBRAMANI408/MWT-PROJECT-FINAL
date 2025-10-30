@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: healthcare-backend
+    env: node
+    region: oregon
+    plan: free
+    repo: "https://github.com/SUBRAMANI408/MWT-PROJECT-FINAL"
+    branch: main
+    rootDir: healthcare-portal-backend
+    buildCommand: npm install
+    startCommand: npm start
